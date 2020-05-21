@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {store} from "../store/store";
-import {TeacherState} from "../store/teacher";
+import {StudentState} from "../store/student";
 import {
     Button,
     Dialog,
@@ -30,32 +30,34 @@ const useStyles = makeStyles({
         borderTopRightRadius: 0
     }
 });
-export default function Teacher(props: any) {
+export default function Student(props: any) {
     const classes = useStyles();
     const [storeState, setStore] = React.useState(
-        Array.from(store.state.teachers.state.values())
+        Array.from(store.state.students.state.values())
     );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
         id: 0,
+        college_id: 0,
         name: "",
         birthday: new Date(),
+        entrance: new Date(),
         sex: 'male' as "male" | "female",
         username: '',
         password: ''
     });
     useEffect(() => {
-        store.state.teachers.subscribe((x) => {
+        store.state.students.subscribe((x) => {
             setStore(Array.from(x.values()));
         });
-        if (store.state.teachers.state.size === 0)
-            store.state.teachers.fetchAll();
+        if (store.state.students.state.size === 0)
+            store.state.students.fetchAll();
     });
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
-        store.state.teachers.set(editing);
+        store.state.students.set(editing);
         setOpen(false);
     };
     return (
@@ -65,25 +67,33 @@ export default function Teacher(props: any) {
                     <TableRow>
                         <TableCell>Id</TableCell>
                         <TableCell>名字</TableCell>
+                        <TableCell>学院</TableCell>
                         <TableCell>年龄</TableCell>
+                        <TableCell>入校日期</TableCell>
                         <TableCell>性别</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {storeState.map((teacher: TeacherState) => {
+                    {storeState.map((student: StudentState) => {
                         return (
-                            <TableRow key={teacher.id}>
+                            <TableRow key={student.id}>
                                 <TableCell component="td" scope="row">
-                                    {teacher.id}
+                                    {student.id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teacher.name}
+                                    {student.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {formatDistanceToNow(teacher.birthday)}
+                                    {student.college_id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teacher.sex}
+                                    {formatDistanceToNow(student.birthday)}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    {format(student.entrance,'yyyy年MM月dd日')}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    {student.sex}
                                 </TableCell>
                             </TableRow>
                         );
@@ -95,7 +105,7 @@ export default function Teacher(props: any) {
                 <DialogTitle id="form-dialog-title">新建</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        请输入教师信息
+                        请输入学生信息
                     </DialogContentText>
                     <TextField
                         autoFocus
@@ -141,6 +151,20 @@ export default function Teacher(props: any) {
                         fullWidth/>
                     <TextField
                         autoFocus
+                        value={editing.college_id}
+                        onChange={(e) => {
+                            setEditing({
+                                ...editing,
+                                college_id: parseInt(e.target.value, 10),
+                            })
+                        }}
+                        margin="dense"
+                        id="college"
+                        label="college"
+                        type="number"
+                        fullWidth/>
+                    <TextField
+                        autoFocus
                         value={format(editing.birthday, 'yyyy-MM-dd')}
                         onChange={(e) => {
                             setEditing({
@@ -151,8 +175,21 @@ export default function Teacher(props: any) {
                         margin="dense"
                         id="birthday"
                         label="birthday"
-                        type="birthday"
-                        fullWidth/>
+                        type="text"
+                        fullWidth/><TextField
+                    autoFocus
+                    value={format(editing.entrance, 'yyyy-MM-dd')}
+                    onChange={(e) => {
+                        setEditing({
+                            ...editing,
+                            entrance: parse(e.target.value, 'yyyy-MM-dd', new Date())
+                        })
+                    }}
+                    margin="dense"
+                    id="entrance"
+                    label="entrance"
+                    type="text"
+                    fullWidth/>
                     <TextField
                         autoFocus
                         value={editing.sex}

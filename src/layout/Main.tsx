@@ -20,6 +20,8 @@ import DvrIcon from '@material-ui/icons/Dvr';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import Department from "../view/Department";
 import Teacher from "../view/Teacher";
+import Student from "../view/Student";
+import Semester from "../view/Semester";
 
 const drawerWidth = 240;
 
@@ -81,6 +83,10 @@ function FunctionList() {
                         <ListItemIcon><AccountBalanceIcon/></ListItemIcon>
                         <ListItemText>学院管理</ListItemText>
                     </ListItemLink>
+                    <ListItemLink href="/#/semester">
+                        <ListItemIcon><PeopleIcon/></ListItemIcon>
+                        <ListItemText>学期管理</ListItemText>
+                    </ListItemLink>
                     <ListItemLink href="/#/student">
                         <ListItemIcon><PeopleIcon/></ListItemIcon>
                         <ListItemText>学生管理</ListItemText>
@@ -92,6 +98,10 @@ function FunctionList() {
                     <ListItemLink href="/#/course">
                         <ListItemIcon><BookIcon/></ListItemIcon>
                         <ListItemText>课程管理</ListItemText>
+                    </ListItemLink>
+                    <ListItemLink href="/#/teacher-courses">
+                        <ListItemIcon><DvrIcon/></ListItemIcon>
+                        <ListItemText>开课管理</ListItemText>
                     </ListItemLink>
                     <ListItemLink href="/#/student-courses">
                         <ListItemIcon><DvrIcon/></ListItemIcon>
@@ -166,8 +176,9 @@ export default function Main(props: { container: any, history: any, children: an
                 <div className={classes.toolbar}/>
                 <Switch>
                     <Route exact path="/department" component={Department}/>
-                    {/*<Route exact path="/student" component={Student}/>*/}
+                    <Route exact path="/student" component={Student}/>
                     <Route exact path="/teacher" component={Teacher}/>
+                    <Route exact path="/semester" component={Semester}/>
                     {/*<Route exact path="/course" component={Course}/>*/}
                     {/*<Route exact path="/student-courses" component={StudentCourses}/>*/}
                     {/*<Route exact path="/course-selection" component={CourseSelection}/>*/}
