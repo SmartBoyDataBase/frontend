@@ -15,7 +15,6 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import {store} from "../store/store";
-import {DepartmentState} from "../store/department";
 
 const useStyles = makeStyles({
     table: {
@@ -30,7 +29,9 @@ const useStyles = makeStyles({
 
 export default function Department(props: any) {
     const classes = useStyles();
-    const [storeState, setStore] = React.useState([] as Array<DepartmentState>);
+    const [storeState, setStore] = React.useState(
+        Array.from(store.state.departments.state.values())
+    );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
         id: 0,
@@ -41,8 +42,9 @@ export default function Department(props: any) {
         store.state.departments.subscribe((x) => {
             setStore(Array.from(x.values()));
         });
-        store.state.departments.fetchAll();
-    }, []);
+        if (store.state.departments.state.size === 0)
+            store.state.departments.fetchAll();
+    });
     const handleClickOpen = () => {
         setOpen(true);
     };

@@ -26,6 +26,16 @@ export class UserStore extends StoreBase {
     constructor(parent: Option<StoreBase>) {
         super(parent);
         this.state = O.none;
+        if (localStorage.getItem("token")) {
+            const token = localStorage.getItem("token")!;
+            const userInfo = JSON.parse(atob(token.split('.')[1]));
+            this.state = O.some({
+                id: userInfo.sub,
+                username: "superuser",
+                role: roleIdRoleMap.get(userInfo.role)! as Role
+            });
+            this.updated()
+        }
     }
 
     public subscribe(callback: (_: O.Option<UserState>) => void): Subscription {
@@ -38,6 +48,7 @@ export class UserStore extends StoreBase {
         }).pipe(
             map(it => it.response.token)
         ).subscribe(token => {
+            localStorage.setItem("token", token);
             const userInfo = JSON.parse(atob(token.split('.')[1]));
             this.state = O.some({
                 id: userInfo.sub,

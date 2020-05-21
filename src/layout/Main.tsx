@@ -19,6 +19,7 @@ import BookIcon from '@material-ui/icons/Book';
 import DvrIcon from '@material-ui/icons/Dvr';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import Department from "../view/Department";
+import Teacher from "../view/Teacher";
 
 const drawerWidth = 240;
 
@@ -166,7 +167,7 @@ export default function Main(props: { container: any, history: any, children: an
                 <Switch>
                     <Route exact path="/department" component={Department}/>
                     {/*<Route exact path="/student" component={Student}/>*/}
-                    {/*<Route exact path="/teacher" component={Teacher}/>*/}
+                    <Route exact path="/teacher" component={Teacher}/>
                     {/*<Route exact path="/course" component={Course}/>*/}
                     {/*<Route exact path="/student-courses" component={StudentCourses}/>*/}
                     {/*<Route exact path="/course-selection" component={CourseSelection}/>*/}
