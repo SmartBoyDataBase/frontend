@@ -23,6 +23,7 @@ import Teacher from "../view/Teacher";
 import Student from "../view/Student";
 import Semester from "../view/Semester";
 import Course from "../view/Course";
+import TeachCourse from "../view/TeachCourse";
 
 const drawerWidth = 240;
 
@@ -100,7 +101,7 @@ function FunctionList() {
                         <ListItemIcon><BookIcon/></ListItemIcon>
                         <ListItemText>课程管理</ListItemText>
                     </ListItemLink>
-                    <ListItemLink href="/#/teacher-courses">
+                    <ListItemLink href="/#/course-teaching">
                         <ListItemIcon><DvrIcon/></ListItemIcon>
                         <ListItemText>开课管理</ListItemText>
                     </ListItemLink>
@@ -183,7 +184,7 @@ export default function Main(props: { container: any, history: any, children: an
                     <Route exact path="/course" component={Course}/>
                     {/*<Route exact path="/student-courses" component={StudentCourses}/>*/}
                     {/*<Route exact path="/course-selection" component={CourseSelection}/>*/}
-                    {/*<Route exact path="/course-teaching" component={CourseTeaching}/>*/}
+                    <Route exact path="/course-teaching" component={TeachCourse}/>
                     <Route exact path="/">
                         <p>请在左侧选取功能</p>
                     </Route>

@@ -6,6 +6,7 @@ import {TeacherStore} from "./teacher";
 import {StudentStore} from "./student";
 import {SemesterStore} from "./semester";
 import {CourseStore} from "./course";
+import {TeachCourseStore} from "./teachCourse";
 
 class Store extends StoreBase {
     public state: {
@@ -14,7 +15,8 @@ class Store extends StoreBase {
         departments: DepartmentStore,
         teachers: TeacherStore,
         students: StudentStore,
-        courses: CourseStore
+        courses: CourseStore,
+        teachCourses: TeachCourseStore,
     };
 
     constructor() {
@@ -25,7 +27,8 @@ class Store extends StoreBase {
             departments: new DepartmentStore(some(this)),
             teachers: new TeacherStore(some(this)),
             students: new StudentStore(some(this)),
-            courses: new CourseStore(some(this))
+            courses: new CourseStore(some(this)),
+            teachCourses: new TeachCourseStore(some(this))
         }
     }
 }
