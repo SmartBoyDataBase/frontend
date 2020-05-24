@@ -22,6 +22,7 @@ import Department from "../view/Department";
 import Teacher from "../view/Teacher";
 import Student from "../view/Student";
 import Semester from "../view/Semester";
+import Course from "../view/Course";
 
 const drawerWidth = 240;
 
@@ -179,7 +180,7 @@ export default function Main(props: { container: any, history: any, children: an
                     <Route exact path="/student" component={Student}/>
                     <Route exact path="/teacher" component={Teacher}/>
                     <Route exact path="/semester" component={Semester}/>
-                    {/*<Route exact path="/course" component={Course}/>*/}
+                    <Route exact path="/course" component={Course}/>
                     {/*<Route exact path="/student-courses" component={StudentCourses}/>*/}
                     {/*<Route exact path="/course-selection" component={CourseSelection}/>*/}
                     {/*<Route exact path="/course-teaching" component={CourseTeaching}/>*/}
