@@ -27,30 +27,31 @@ const useStyles = makeStyles({
     }
 });
 
-export default function TeachCourse(props: any) {
+export default function CourseSelection(props: any) {
     const classes = useStyles();
     const [storeState, setStore] = React.useState(
-        Array.from(store.state.teachCourses.state.values())
+        Array.from(store.state.courseSelections.state.values())
     );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
-        id: 0,
-        course_id: 0,
-        teacher_id: 0,
-        semester_id: 0
+        student_id: 0,
+        teach_course_id: 0,
+        regular_grade: undefined as number | undefined,
+        exam_grade: undefined as number | undefined,
+        final_grade: undefined as number | undefined,
     });
     useEffect(() => {
-        store.state.teachCourses.subscribe((x) => {
+        store.state.courseSelections.subscribe((x) => {
             setStore(Array.from(x.values()));
         });
-        if (store.state.teachCourses.state.size === 0)
-            store.state.teachCourses.fetchAll();
+        if (store.state.courseSelections.state.length === 0)
+            store.state.courseSelections.fetchAll();
     });
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
-        store.state.teachCourses.set(editing);
+        store.state.courseSelections.set(editing);
         setOpen(false);
     };
     return (
@@ -58,28 +59,32 @@ export default function TeachCourse(props: any) {
             <Table className={classes.table} aria-label="custom pagination table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Id</TableCell>
-                        <TableCell>学期</TableCell>
-                        <TableCell>课程</TableCell>
-                        <TableCell>教师</TableCell>
+                        <TableCell>学生Id</TableCell>
+                        <TableCell>课程Id</TableCell>
+                        <TableCell>平时成绩</TableCell>
+                        <TableCell>考试成绩</TableCell>
+                        <TableCell>总评成绩</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {storeState.map((teachCourse: any) => {
+                    {storeState.map((courseSelection: any) => {
                         return (
                             <TableRow
-                                key={teachCourse.id}>
+                                key={`${courseSelection.student_id}-${courseSelection.course_id}`}>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.id}
+                                    {courseSelection.student_id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.semester_id}
+                                    {courseSelection.teach_course_id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.course_id}
+                                    {courseSelection.regular_grade}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.teacher_id}
+                                    {courseSelection.exam_grade}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    {courseSelection.final_grade}
                                 </TableCell>
                             </TableRow>
                         );
@@ -91,48 +96,76 @@ export default function TeachCourse(props: any) {
                 <DialogTitle id="form-dialog-title">新建</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        请输入开课信息
+                        请输入选课信息
                     </DialogContentText>
                     <TextField
                         autoFocus
-                        value={editing.semester_id}
+                        value={editing.student_id}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                semester_id: parseInt(e.target.value)
+                                student_id: parseInt(e.target.value)
                             });
                         }}
                         margin="dense"
-                        id="semesterId"
-                        label="semesterId"
+                        id="studentId"
+                        label="studentId"
+                        type="number"
+                        fullWidth/>
+                    <TextField
+                        autoFocus
+                        value={editing.teach_course_id}
+                        onChange={(e) => {
+                            setEditing({
+                                ...editing,
+                                teach_course_id: parseInt(e.target.value)
+                            });
+                        }}
+                        margin="dense"
+                        id="teachCourse_id"
+                        label="teachCourse_id"
+                        type="number"
+                        fullWidth/>
+                    <TextField
+                        autoFocus
+                        value={editing.regular_grade}
+                        onChange={(e) => {
+                            setEditing({
+                                ...editing,
+                                regular_grade: e.target.value === "" ? undefined : parseInt(e.target.value)
+                            });
+                        }}
+                        margin="dense"
+                        id="regularGrade"
+                        label="regularGrade"
                         type="text"
                         fullWidth/>
                     <TextField
                         autoFocus
-                        value={editing.course_id}
+                        value={editing.exam_grade}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                course_id: parseInt(e.target.value)
+                                exam_grade: e.target.value === "" ? undefined : parseInt(e.target.value)
                             });
                         }}
                         margin="dense"
-                        id="courseId"
-                        label="courseId"
+                        id="examGrade"
+                        label="examGrade"
                         type="text"
                         fullWidth/>
                     <TextField
                         autoFocus
-                        value={editing.teacher_id}
+                        value={editing.final_grade}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                teacher_id: parseInt(e.target.value)
+                                final_grade: e.target.value === "" ? undefined : parseInt(e.target.value)
                             });
                         }}
                         margin="dense"
-                        id="teacherId"
-                        label="teacherId"
+                        id="finalGrade"
+                        label="finalGrade"
                         type="text"
                         fullWidth/>
                 </DialogContent>

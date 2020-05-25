@@ -4,17 +4,18 @@ import {Ajax} from "../service/ajax";
 import {Option} from "fp-ts/lib/Option";
 
 export interface TeachCourseState {
+    id: number,
     course_id: number,
     teacher_id: number,
     semester_id: number
 }
 
 export class TeachCourseStore extends StoreBase {
-    state: Array<TeachCourseState>;
+    state: Map<number, TeachCourseState>;
 
     constructor(parent: Option<StoreBase>) {
         super(parent);
-        this.state = new Array<TeachCourseState>();
+        this.state = new Map<number, TeachCourseState>();
     }
 
     public subscribe(callback: (_: Map<number, TeachCourseState>) => void): Subscription {
@@ -24,7 +25,7 @@ export class TeachCourseStore extends StoreBase {
     public set(teacherCourse: TeachCourseState) {
         Ajax.post(`api/teach-course?course_id=${teacherCourse.course_id}&teacher_id=${teacherCourse.teacher_id}&semester_id=${teacherCourse.semester_id}`, {})
             .subscribe((response) => {
-                this.state.push(response.response);
+                this.state.set(response.response.id, response.response);
                 this.updated();
             })
     }
@@ -34,7 +35,7 @@ export class TeachCourseStore extends StoreBase {
         Ajax.get('api/teach-courses')
             .subscribe(response => {
                 response.response.forEach((it: TeachCourseState) =>
-                    this.state.push(it)
+                    this.state.set(it.id, it)
                 );
                 this.updated();
             })
