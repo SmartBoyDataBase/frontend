@@ -48,4 +48,12 @@ export class CourseStore extends StoreBase {
                 this.updated();
             })
     }
+
+    public fetch(id: number) {
+        Ajax.get(`api/course?id=${id}`)
+            .subscribe(response => {
+                this.state.set(response.response.id, response.response);
+                this.updated();
+            });
+    }
 }

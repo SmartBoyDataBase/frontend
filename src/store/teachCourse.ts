@@ -40,4 +40,14 @@ export class TeachCourseStore extends StoreBase {
                 this.updated();
             })
     }
+
+    public fetchForTeacher(teacherId: number) {
+        Ajax.get(`api/teach-courses?teacher_id=${teacherId}`)
+            .subscribe(response => {
+                response.response.forEach((it: TeachCourseState) =>
+                    this.state.set(it.id, it)
+                );
+                this.updated();
+            })
+    }
 }

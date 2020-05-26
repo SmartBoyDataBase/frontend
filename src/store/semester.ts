@@ -64,4 +64,16 @@ export class SemesterStore extends StoreBase {
                 this.updated();
             })
     }
+
+    public fetch(id: number) {
+        Ajax.get(`api/semester?id=${id}`)
+            .subscribe(response => {
+                this.state.set(response.response.id, {
+                    ...response.response,
+                    start: parse(response.response.start.slice(0, 10), "yyyy-MM-dd", new Date()),
+                    end: parse(response.response.end.slice(0, 10), "yyyy-MM-dd", new Date()),
+                });
+                this.updated();
+            })
+    }
 }
