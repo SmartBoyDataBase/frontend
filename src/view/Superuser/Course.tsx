@@ -14,7 +14,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
-import {store} from "../store/store";
+import {store} from "../../store/store";
 
 const useStyles = makeStyles({
     table: {
@@ -27,30 +27,29 @@ const useStyles = makeStyles({
     }
 });
 
-export default function TeachCourse(props: any) {
+export default function Course(props: any) {
     const classes = useStyles();
     const [storeState, setStore] = React.useState(
-        Array.from(store.state.teachCourses.state.values())
+        Array.from(store.state.courses.state.values())
     );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
         id: 0,
-        course_id: 0,
-        teacher_id: 0,
-        semester_id: 0
+        name: '',
+        credit: 0,
+        college_id: 0
     });
     useEffect(() => {
-        store.state.teachCourses.subscribe((x) => {
+        store.state.courses.subscribe((x) => {
             setStore(Array.from(x.values()));
         });
-        if (store.state.teachCourses.state.size === 0)
-            store.state.teachCourses.fetchAll();
-    });
+        store.state.courses.fetchAll();
+    }, []);
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
-        store.state.teachCourses.set(editing);
+        store.state.courses.set(editing);
         setOpen(false);
     };
     return (
@@ -59,27 +58,26 @@ export default function TeachCourse(props: any) {
                 <TableHead>
                     <TableRow>
                         <TableCell>Id</TableCell>
-                        <TableCell>学期</TableCell>
-                        <TableCell>课程</TableCell>
-                        <TableCell>教师</TableCell>
+                        <TableCell>名字</TableCell>
+                        <TableCell>学分</TableCell>
+                        <TableCell>学院</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {storeState.map((teachCourse: any) => {
+                    {storeState.map((course: any) => {
                         return (
-                            <TableRow
-                                key={teachCourse.id}>
+                            <TableRow key={course.id}>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.id}
+                                    {course.id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.semester_id}
+                                    {course.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.course_id}
+                                    {course.credit}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.teacher_id}
+                                    {course.college_id}
                                 </TableCell>
                             </TableRow>
                         );
@@ -91,49 +89,49 @@ export default function TeachCourse(props: any) {
                 <DialogTitle id="form-dialog-title">新建</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        请输入开课信息
+                        请输入课程信息
                     </DialogContentText>
                     <TextField
                         autoFocus
-                        value={editing.semester_id}
+                        value={editing.name}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                semester_id: parseInt(e.target.value)
+                                name: e.target.value
                             });
                         }}
                         margin="dense"
-                        id="semesterId"
-                        label="semesterId"
+                        id="name"
+                        label="name"
                         type="text"
                         fullWidth/>
                     <TextField
                         autoFocus
-                        value={editing.course_id}
+                        value={editing.credit}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                course_id: parseInt(e.target.value)
+                                credit: parseInt(e.target.value, 10)
                             });
                         }}
                         margin="dense"
-                        id="courseId"
-                        label="courseId"
-                        type="text"
+                        id="credit"
+                        label="credit"
+                        type="number"
                         fullWidth/>
                     <TextField
                         autoFocus
-                        value={editing.teacher_id}
+                        value={editing.college_id}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                teacher_id: parseInt(e.target.value)
+                                college_id: parseInt(e.target.value, 10)
                             });
                         }}
                         margin="dense"
-                        id="teacherId"
-                        label="teacherId"
-                        type="text"
+                        id="college_id"
+                        label="college_id"
+                        type="number"
                         fullWidth/>
                 </DialogContent>
                 <DialogActions>

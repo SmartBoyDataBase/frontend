@@ -14,7 +14,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
-import {store} from "../store/store";
+import {store} from "../../store/store";
 
 const useStyles = makeStyles({
     table: {
@@ -44,9 +44,8 @@ export default function CourseSelection(props: any) {
         store.state.courseSelections.subscribe((x) => {
             setStore(Array.from(x.values()));
         });
-        if (store.state.courseSelections.state.length === 0)
-            store.state.courseSelections.fetchAll();
-    });
+        store.state.courseSelections.fetchAll();
+    }, []);
     const handleClickOpen = () => {
         setOpen(true);
     };

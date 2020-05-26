@@ -1,20 +1,24 @@
 import React, {useEffect} from "react";
-import {TableContainer} from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import TableBody from "@material-ui/core/TableBody";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import TextField from "@material-ui/core/TextField";
-import DialogActions from "@material-ui/core/DialogActions";
-import {store} from "../store/store";
+import {makeStyles} from "@material-ui/core/styles";
+import {store} from "../../store/store";
+import {TeacherState} from "../../store/teacher";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField
+} from "@material-ui/core";
+import {format, formatDistanceToNow, parse} from "date-fns";
 
 const useStyles = makeStyles({
     table: {
@@ -26,31 +30,31 @@ const useStyles = makeStyles({
         borderTopRightRadius: 0
     }
 });
-
-export default function Course(props: any) {
+export default function Teacher(props: any) {
     const classes = useStyles();
     const [storeState, setStore] = React.useState(
-        Array.from(store.state.courses.state.values())
+        Array.from(store.state.teachers.state.values())
     );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
         id: 0,
-        name: '',
-        credit: 0,
-        college_id: 0
+        name: "",
+        birthday: new Date(),
+        sex: 'male' as "male" | "female",
+        username: '',
+        password: ''
     });
     useEffect(() => {
-        store.state.courses.subscribe((x) => {
+        store.state.teachers.subscribe((x) => {
             setStore(Array.from(x.values()));
         });
-        if (store.state.courses.state.size === 0)
-            store.state.courses.fetchAll();
-    });
+        store.state.teachers.fetchAll();
+    }, []);
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
-        store.state.courses.set(editing);
+        store.state.teachers.set(editing);
         setOpen(false);
     };
     return (
@@ -60,25 +64,25 @@ export default function Course(props: any) {
                     <TableRow>
                         <TableCell>Id</TableCell>
                         <TableCell>名字</TableCell>
-                        <TableCell>学分</TableCell>
-                        <TableCell>学院</TableCell>
+                        <TableCell>年龄</TableCell>
+                        <TableCell>性别</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {storeState.map((course: any) => {
+                    {storeState.map((teacher: TeacherState) => {
                         return (
-                            <TableRow key={course.id}>
+                            <TableRow key={teacher.id}>
                                 <TableCell component="td" scope="row">
-                                    {course.id}
+                                    {teacher.id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {course.name}
+                                    {teacher.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {course.credit}
+                                    {formatDistanceToNow(teacher.birthday)}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {course.college_id}
+                                    {teacher.sex}
                                 </TableCell>
                             </TableRow>
                         );
@@ -90,8 +94,36 @@ export default function Course(props: any) {
                 <DialogTitle id="form-dialog-title">新建</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        请输入课程信息
+                        请输入教师信息
                     </DialogContentText>
+                    <TextField
+                        autoFocus
+                        value={editing.username}
+                        onChange={(e) => {
+                            setEditing({
+                                ...editing,
+                                username: e.target.value
+                            })
+                        }}
+                        margin="dense"
+                        id="username"
+                        label="username"
+                        type="text"
+                        fullWidth/>
+                    <TextField
+                        autoFocus
+                        value={editing.password}
+                        onChange={(e) => {
+                            setEditing({
+                                ...editing,
+                                password: e.target.value
+                            })
+                        }}
+                        margin="dense"
+                        id="password"
+                        label="password"
+                        type="password"
+                        fullWidth/>
                     <TextField
                         autoFocus
                         value={editing.name}
@@ -99,7 +131,7 @@ export default function Course(props: any) {
                             setEditing({
                                 ...editing,
                                 name: e.target.value
-                            });
+                            })
                         }}
                         margin="dense"
                         id="name"
@@ -108,31 +140,31 @@ export default function Course(props: any) {
                         fullWidth/>
                     <TextField
                         autoFocus
-                        value={editing.credit}
+                        value={format(editing.birthday, 'yyyy-MM-dd')}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                credit: parseInt(e.target.value, 10)
-                            });
+                                birthday: parse(e.target.value, 'yyyy-MM-dd', new Date())
+                            })
                         }}
                         margin="dense"
-                        id="credit"
-                        label="credit"
-                        type="number"
+                        id="birthday"
+                        label="birthday"
+                        type="birthday"
                         fullWidth/>
                     <TextField
                         autoFocus
-                        value={editing.college_id}
+                        value={editing.sex}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                college_id: parseInt(e.target.value, 10)
-                            });
+                                sex: e.target.value as 'male' | 'female'
+                            })
                         }}
                         margin="dense"
-                        id="college_id"
-                        label="college_id"
-                        type="number"
+                        id="sex"
+                        label="sex"
+                        type="text"
                         fullWidth/>
                 </DialogContent>
                 <DialogActions>

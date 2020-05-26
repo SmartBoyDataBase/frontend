@@ -1,6 +1,6 @@
 import React from "react";
 import {HashRouter, Route, Switch} from "react-router-dom";
-import SignIn from "./view/SignIn";
+import SignIn from "./view/Superuser/SignIn";
 import Main from "./layout/Main";
 
 const App = () => {

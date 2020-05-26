@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -7,24 +7,25 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import {List, ListItem, ListItemIcon, ListItemProps, ListItemText} from "@material-ui/core";
+import {Button, List, ListItem, ListItemIcon, ListItemProps, ListItemText} from "@material-ui/core";
 import Hidden from "@material-ui/core/Hidden";
 import useTheme from "@material-ui/core/styles/useTheme";
 import {Route, Switch} from "react-router-dom";
 import {store} from "../store/store";
-import {toNullable} from "fp-ts/lib/Option";
+import {isNone, map, toNullable} from "fp-ts/lib/Option";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import PeopleIcon from '@material-ui/icons/People';
 import BookIcon from '@material-ui/icons/Book';
 import DvrIcon from '@material-ui/icons/Dvr';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import Department from "../view/Department";
-import Teacher from "../view/Teacher";
-import Student from "../view/Student";
-import Semester from "../view/Semester";
-import Course from "../view/Course";
-import TeachCourse from "../view/TeachCourse";
-import CourseSelection from "../view/CourseSelection";
+import Department from "../view/Superuser/Department";
+import Teacher from "../view/Superuser/Teacher";
+import Student from "../view/Superuser/Student";
+import Semester from "../view/Superuser/Semester";
+import Course from "../view/Superuser/Course";
+import TeachCourse from "../view/Superuser/TeachCourse";
+import CourseSelection from "../view/Superuser/CourseSelection";
+import {pipe} from "fp-ts/lib/pipeable";
 
 const drawerWidth = 240;
 
@@ -77,7 +78,7 @@ function ListItemLink(props: ListItemProps<'a', { button?: true }>) {
 
 function FunctionList() {
     const [storeState, _] = React.useState(store.state.user);
-    let type = toNullable(storeState.state)!.role;
+    let type = pipe(storeState.state, map(it => it.role), toNullable);
     switch (type) {
         case "superuser":
             return (
@@ -124,6 +125,11 @@ export default function Main(props: { container: any, history: any, children: an
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+    useEffect(() => {
+        if (isNone(store.state.user.state)) {
+            props.history.push("login");
+        }
+    }, [props.history]);
     return (
         <div className={classes.root}>
             <CssBaseline/>
@@ -141,7 +147,7 @@ export default function Main(props: { container: any, history: any, children: an
                     <Typography variant="h6" noWrap>
                         {/*{toNullable(storeState.user)?.type}*/}
                     </Typography>
-                    {/*<Button className={classes.logout} onClick={() => store.logout()}>退出</Button>*/}
+                    <Button className={classes.logout} onClick={() => store.state.user.logout()}>退出</Button>
                 </Toolbar>
             </AppBar>
             <nav className={classes.drawer} aria-label="mailbox folders">

@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import {store} from "../store/store";
+import {store} from "../../store/store";
 import {isSome} from "fp-ts/lib/Option";
 
 const useStyles = makeStyles(theme => ({

@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {store} from "../store/store";
-import {StudentState} from "../store/student";
+import {store} from "../../store/store";
+import {StudentState} from "../../store/student";
 import {
     Button,
     Dialog,
@@ -52,7 +52,7 @@ export default function Student(props: any) {
         });
         if (store.state.students.state.size === 0)
             store.state.students.fetchAll();
-    });
+    }, []);
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -90,7 +90,7 @@ export default function Student(props: any) {
                                     {formatDistanceToNow(student.birthday)}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {format(student.entrance,'yyyy年MM月dd日')}
+                                    {format(student.entrance, 'yyyy年MM月dd日')}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {student.sex}

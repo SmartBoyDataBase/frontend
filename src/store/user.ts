@@ -58,4 +58,9 @@ export class UserStore extends StoreBase {
             this.updated()
         });
     }
+
+    public logout() {
+        localStorage.removeItem("token");
+        window.location.assign("/");
+    }
 }

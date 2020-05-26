@@ -14,8 +14,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
-import {store} from "../store/store";
-import {format, parse} from "date-fns";
+import {store} from "../../store/store";
 
 const useStyles = makeStyles({
     table: {
@@ -28,30 +27,28 @@ const useStyles = makeStyles({
     }
 });
 
-export default function Semester(props: any) {
+export default function Department(props: any) {
     const classes = useStyles();
     const [storeState, setStore] = React.useState(
-        Array.from(store.state.semesters.state.values())
+        Array.from(store.state.departments.state.values())
     );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
         id: 0,
-        name: '',
-        start: new Date(),
-        end: new Date()
+        name: "",
+        admin: 1
     });
     useEffect(() => {
-        store.state.semesters.subscribe((x) => {
+        store.state.departments.subscribe((x) => {
             setStore(Array.from(x.values()));
         });
-        if (store.state.semesters.state.size === 0)
-            store.state.semesters.fetchAll();
-    });
+        store.state.departments.fetchAll();
+    }, []);
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
-        store.state.semesters.set(editing);
+        store.state.departments.set(editing);
         setOpen(false);
     };
     return (
@@ -61,25 +58,21 @@ export default function Semester(props: any) {
                     <TableRow>
                         <TableCell>Id</TableCell>
                         <TableCell>名字</TableCell>
-                        <TableCell>开始日期</TableCell>
-                        <TableCell>结束日期</TableCell>
+                        <TableCell>管理员</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {storeState.map((semester: any) => {
+                    {storeState.map((department: any) => {
                         return (
-                            <TableRow key={semester.id}>
+                            <TableRow key={department.id}>
                                 <TableCell component="td" scope="row">
-                                    {semester.id}
+                                    {department.id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {semester.name}
+                                    {department.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {format(semester.start, "yyyy-MM-dd")}
-                                </TableCell>
-                                <TableCell component="td" scope="row">
-                                    {format(semester.end, "yyyy-MM-dd")}
+                                    {department.admin}
                                 </TableCell>
                             </TableRow>
                         );
@@ -91,7 +84,7 @@ export default function Semester(props: any) {
                 <DialogTitle id="form-dialog-title">新建</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        请输入学期信息
+                        请输入学院名称
                     </DialogContentText>
                     <TextField
                         autoFocus
@@ -103,37 +96,10 @@ export default function Semester(props: any) {
                             });
                         }}
                         margin="dense"
-                        id="semester"
-                        label="Semester"
+                        id="department"
+                        label="Department"
                         type="text"
                         fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={format(editing.start, 'yyyy-MM-dd')}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                start: parse(e.target.value, 'yyyy-MM-dd', new Date())
-                            })
-                        }}
-                        margin="dense"
-                        id="start"
-                        label="start"
-                        type="text"
-                        fullWidth/><TextField
-                    autoFocus
-                    value={format(editing.end, 'yyyy-MM-dd')}
-                    onChange={(e) => {
-                        setEditing({
-                            ...editing,
-                            end: parse(e.target.value, 'yyyy-MM-dd', new Date())
-                        })
-                    }}
-                    margin="dense"
-                    id="end"
-                    label="end"
-                    type="text"
-                    fullWidth/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

@@ -1,24 +1,20 @@
 import React, {useEffect} from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {store} from "../store/store";
-import {TeacherState} from "../store/teacher";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField
-} from "@material-ui/core";
-import {format, formatDistanceToNow, parse} from "date-fns";
+import {TableContainer} from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import Table from "@material-ui/core/Table";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import TableBody from "@material-ui/core/TableBody";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import TextField from "@material-ui/core/TextField";
+import DialogActions from "@material-ui/core/DialogActions";
+import {store} from "../../store/store";
 
 const useStyles = makeStyles({
     table: {
@@ -30,32 +26,30 @@ const useStyles = makeStyles({
         borderTopRightRadius: 0
     }
 });
-export default function Teacher(props: any) {
+
+export default function TeachCourse(props: any) {
     const classes = useStyles();
     const [storeState, setStore] = React.useState(
-        Array.from(store.state.teachers.state.values())
+        Array.from(store.state.teachCourses.state.values())
     );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
         id: 0,
-        name: "",
-        birthday: new Date(),
-        sex: 'male' as "male" | "female",
-        username: '',
-        password: ''
+        course_id: 0,
+        teacher_id: 0,
+        semester_id: 0
     });
     useEffect(() => {
-        store.state.teachers.subscribe((x) => {
+        store.state.teachCourses.subscribe((x) => {
             setStore(Array.from(x.values()));
         });
-        if (store.state.teachers.state.size === 0)
-            store.state.teachers.fetchAll();
-    });
+        store.state.teachCourses.fetchAll();
+    }, []);
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
-        store.state.teachers.set(editing);
+        store.state.teachCourses.set(editing);
         setOpen(false);
     };
     return (
@@ -64,26 +58,27 @@ export default function Teacher(props: any) {
                 <TableHead>
                     <TableRow>
                         <TableCell>Id</TableCell>
-                        <TableCell>名字</TableCell>
-                        <TableCell>年龄</TableCell>
-                        <TableCell>性别</TableCell>
+                        <TableCell>学期</TableCell>
+                        <TableCell>课程</TableCell>
+                        <TableCell>教师</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {storeState.map((teacher: TeacherState) => {
+                    {storeState.map((teachCourse: any) => {
                         return (
-                            <TableRow key={teacher.id}>
+                            <TableRow
+                                key={teachCourse.id}>
                                 <TableCell component="td" scope="row">
-                                    {teacher.id}
+                                    {teachCourse.id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teacher.name}
+                                    {teachCourse.semester_id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {formatDistanceToNow(teacher.birthday)}
+                                    {teachCourse.course_id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teacher.sex}
+                                    {teachCourse.teacher_id}
                                 </TableCell>
                             </TableRow>
                         );
@@ -95,76 +90,48 @@ export default function Teacher(props: any) {
                 <DialogTitle id="form-dialog-title">新建</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        请输入教师信息
+                        请输入开课信息
                     </DialogContentText>
                     <TextField
                         autoFocus
-                        value={editing.username}
+                        value={editing.semester_id}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                username: e.target.value
-                            })
+                                semester_id: parseInt(e.target.value)
+                            });
                         }}
                         margin="dense"
-                        id="username"
-                        label="username"
+                        id="semesterId"
+                        label="semesterId"
                         type="text"
                         fullWidth/>
                     <TextField
                         autoFocus
-                        value={editing.password}
+                        value={editing.course_id}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                password: e.target.value
-                            })
+                                course_id: parseInt(e.target.value)
+                            });
                         }}
                         margin="dense"
-                        id="password"
-                        label="password"
-                        type="password"
-                        fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={editing.name}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                name: e.target.value
-                            })
-                        }}
-                        margin="dense"
-                        id="name"
-                        label="name"
+                        id="courseId"
+                        label="courseId"
                         type="text"
                         fullWidth/>
                     <TextField
                         autoFocus
-                        value={format(editing.birthday, 'yyyy-MM-dd')}
+                        value={editing.teacher_id}
                         onChange={(e) => {
                             setEditing({
                                 ...editing,
-                                birthday: parse(e.target.value, 'yyyy-MM-dd', new Date())
-                            })
+                                teacher_id: parseInt(e.target.value)
+                            });
                         }}
                         margin="dense"
-                        id="birthday"
-                        label="birthday"
-                        type="birthday"
-                        fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={editing.sex}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                sex: e.target.value as 'male' | 'female'
-                            })
-                        }}
-                        margin="dense"
-                        id="sex"
-                        label="sex"
+                        id="teacherId"
+                        label="teacherId"
                         type="text"
                         fullWidth/>
                 </DialogContent>
