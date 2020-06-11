@@ -42,4 +42,15 @@ export class CourseSelectionStore extends StoreBase {
                 this.updated();
             })
     }
+
+    public fetchByTeachCourse(id: number) {
+        Ajax.get(`api/course-selections?teachcourse_id=${id}`)
+            .subscribe(response => {
+                console.log(response);
+                response.response.forEach((it: CourseSelectionState) =>
+                    this.state.push(it)
+                );
+                this.updated();
+            })
+    }
 }

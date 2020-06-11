@@ -44,10 +44,9 @@ export default function MyCourseTeaching(props: any) {
             {
                 Array.from(storeState.teachCourses.state.values())
                     .filter(teachCourse => teachCourse.teacher_id === toNullable(store.state.user.state)!.id)
-                    .map(teachCourse => teachCourse.course_id)
-                    .map(courseId => storeState.courses.state.get(courseId))
-                    .map(course =>
-                        <CourseTeachingPanel key={course?.id} course={course}/>
+                    .map(teachCourse =>
+                        <CourseTeachingPanel key={teachCourse.id}
+                                             courseTeaching={teachCourse}/>
                     )
             }
         </div>

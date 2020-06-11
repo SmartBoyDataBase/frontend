@@ -1,6 +1,6 @@
 import {ajax} from 'rxjs/ajax';
 
-const baseUrl = "http://dianzhou.tpddns.cn:30000/";
+const baseUrl = "http://0.0.0.0:30000/";
 export const Ajax = {
     token: "",
     setToken(token: string) {
