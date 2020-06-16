@@ -27,6 +27,7 @@ import TeachCourse from "../view/Superuser/TeachCourse";
 import CourseSelection from "../view/Superuser/CourseSelection";
 import {pipe} from "fp-ts/lib/pipeable";
 import MyCourseTeaching from "../view/Teacher/MyCourseTeaching";
+import MyCourseSelection from "../view/Student/CourseSelection";
 
 const drawerWidth = 240;
 
@@ -123,6 +124,15 @@ function FunctionList() {
                     </ListItemLink>
                 </List>
             )
+        case "student":
+            return (
+                <List>
+                    <ListItemLink href="/#/my-course-selection">
+                        <ListItemIcon><DvrIcon/></ListItemIcon>
+                        <ListItemText>选课管理</ListItemText>
+                    </ListItemLink>
+                </List>
+            )
     }
     return <List/>
 }
@@ -202,6 +212,7 @@ export default function Main(props: { container: any, history: any, children: an
                     <Route exact path="/course-selection" component={CourseSelection}/>
                     <Route exact path="/course-teaching" component={TeachCourse}/>
                     <Route exact path="/my-courses-teaching" component={MyCourseTeaching}/>
+                    <Route exact path="/my-course-selection" component={MyCourseSelection}/>
                     <Route exact path="/">
                         <p>请在左侧选取功能</p>
                     </Route>

@@ -35,7 +35,6 @@ export class CourseSelectionStore extends StoreBase {
     public fetchAll() {
         Ajax.get('api/course-selections')
             .subscribe(response => {
-                console.log(response);
                 response.response.forEach((it: CourseSelectionState) =>
                     this.state.push(it)
                 );
@@ -46,7 +45,16 @@ export class CourseSelectionStore extends StoreBase {
     public fetchByTeachCourse(id: number) {
         Ajax.get(`api/course-selections?teachcourse_id=${id}`)
             .subscribe(response => {
-                console.log(response);
+                response.response.forEach((it: CourseSelectionState) =>
+                    this.state.push(it)
+                );
+                this.updated();
+            })
+    }
+
+    public fetchByStudent(id: number) {
+        Ajax.get(`api/course-selections?student=${id}`)
+            .subscribe(response => {
                 response.response.forEach((it: CourseSelectionState) =>
                     this.state.push(it)
                 );

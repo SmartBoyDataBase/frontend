@@ -1,12 +1,8 @@
 import React, {useEffect} from "react";
-import {TableContainer} from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {store} from "../../store/store";
 import {toNullable} from "fp-ts/lib/Option";
 import CourseTeachingPanel from "./CourseTeachingPanel";
-import TeachCourse from "../Superuser/TeachCourse";
-import {TeachCourseState} from "../../store/teachCourse";
 
 const useStyles = makeStyles({
     table: {

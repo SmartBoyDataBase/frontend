@@ -55,7 +55,7 @@ export default function CourseSelection(props: any) {
     };
     return (
         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="custom pagination table">
+            <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
                         <TableCell>学生Id</TableCell>
