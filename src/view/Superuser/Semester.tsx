@@ -15,7 +15,9 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import {store} from "../../store/store";
-import {format, parse} from "date-fns";
+import {format} from "date-fns";
+import {KeyboardDatePicker, MuiPickersUtilsProvider,} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 const useStyles = makeStyles({
     table: {
@@ -106,33 +108,32 @@ export default function Semester(props: any) {
                         label="Semester"
                         type="text"
                         fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={format(editing.start, 'yyyy-MM-dd')}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                start: parse(e.target.value, 'yyyy-MM-dd', new Date())
-                            })
-                        }}
-                        margin="dense"
-                        id="start"
-                        label="start"
-                        type="text"
-                        fullWidth/><TextField
-                    autoFocus
-                    value={format(editing.end, 'yyyy-MM-dd')}
-                    onChange={(e) => {
-                        setEditing({
-                            ...editing,
-                            end: parse(e.target.value, 'yyyy-MM-dd', new Date())
-                        })
-                    }}
-                    margin="dense"
-                    id="end"
-                    label="end"
-                    type="text"
-                    fullWidth/>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="yyyy-MM-dd"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label="开始日期"
+                            value={editing.start}
+                            onChange={(e) => {
+                                setEditing({...editing, start: e as Date})
+                            }}
+                        />
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="yyyy-MM-dd"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label="结束日期"
+                            value={editing.end}
+                            onChange={(e) => {
+                                setEditing({...editing, end: e as Date})
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

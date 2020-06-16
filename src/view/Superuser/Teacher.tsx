@@ -9,7 +9,10 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControlLabel,
+    FormLabel,
     Paper,
+    Radio,
     Table,
     TableBody,
     TableCell,
@@ -19,6 +22,7 @@ import {
     TextField
 } from "@material-ui/core";
 import {format, formatDistanceToNow, parse} from "date-fns";
+import RadioGroup from "@material-ui/core/RadioGroup";
 
 const useStyles = makeStyles({
     table: {
@@ -152,20 +156,16 @@ export default function Teacher(props: any) {
                         label="birthday"
                         type="birthday"
                         fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={editing.sex}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                sex: e.target.value as 'male' | 'female'
-                            })
-                        }}
-                        margin="dense"
-                        id="sex"
-                        label="sex"
-                        type="text"
-                        fullWidth/>
+                    <FormLabel component="legend">性别</FormLabel>
+                    <RadioGroup aria-label="性别" name="性别" value={editing.sex} onChange={(e) => {
+                        setEditing({
+                            ...editing,
+                            sex: e.target.value as 'male' | 'female'
+                        })
+                    }}>
+                        <FormControlLabel value="female" control={<Radio/>} label="Female"/>
+                        <FormControlLabel value="male" control={<Radio/>} label="Male"/>
+                    </RadioGroup>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

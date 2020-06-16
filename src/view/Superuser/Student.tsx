@@ -9,7 +9,10 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControlLabel,
+    FormLabel,
     Paper,
+    Radio,
     Table,
     TableBody,
     TableCell,
@@ -18,7 +21,10 @@ import {
     TableRow,
     TextField
 } from "@material-ui/core";
-import {format, formatDistanceToNow, parse} from "date-fns";
+import {format, formatDistanceToNow} from "date-fns";
+import DateFnsUtils from '@date-io/date-fns';
+import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import RadioGroup from "@material-ui/core/RadioGroup";
 
 const useStyles = makeStyles({
     table: {
@@ -163,47 +169,43 @@ export default function Student(props: any) {
                         label="college"
                         type="number"
                         fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={format(editing.birthday, 'yyyy-MM-dd')}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                birthday: parse(e.target.value, 'yyyy-MM-dd', new Date())
-                            })
-                        }}
-                        margin="dense"
-                        id="birthday"
-                        label="birthday"
-                        type="text"
-                        fullWidth/><TextField
-                    autoFocus
-                    value={format(editing.entrance, 'yyyy-MM-dd')}
-                    onChange={(e) => {
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="yyyy-MM-dd"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label="出生日期"
+                            value={editing.birthday}
+                            onChange={(e) => {
+                                setEditing({...editing, birthday: e as Date})
+                            }}
+                        />
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="yyyy-MM-dd"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label="入学日期"
+                            value={editing.entrance}
+                            onChange={(e) => {
+                                setEditing({...editing, entrance: e as Date})
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
+
+                    <FormLabel component="legend">性别</FormLabel>
+                    <RadioGroup aria-label="性别" name="性别" value={editing.sex} onChange={(e) => {
                         setEditing({
                             ...editing,
-                            entrance: parse(e.target.value, 'yyyy-MM-dd', new Date())
+                            sex: e.target.value as 'male' | 'female'
                         })
-                    }}
-                    margin="dense"
-                    id="entrance"
-                    label="entrance"
-                    type="text"
-                    fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={editing.sex}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                sex: e.target.value as 'male' | 'female'
-                            })
-                        }}
-                        margin="dense"
-                        id="sex"
-                        label="sex"
-                        type="text"
-                        fullWidth/>
+                    }}>
+                        <FormControlLabel value="female" control={<Radio/>} label="Female"/>
+                        <FormControlLabel value="male" control={<Radio/>} label="Male"/>
+                    </RadioGroup>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
