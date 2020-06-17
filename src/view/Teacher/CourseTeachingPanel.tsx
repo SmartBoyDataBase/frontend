@@ -5,6 +5,7 @@ import {
     ExpansionPanelDetails,
     ExpansionPanelSummary,
     Paper,
+    Slider,
     Table,
     TableCell,
     TableContainer,
@@ -18,6 +19,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {store} from "../../store/store";
 import {TeachCourseState} from "../../store/teachCourse";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,11 +33,15 @@ const useStyles = makeStyles((theme: Theme) =>
             fontSize: theme.typography.pxToRem(15),
             fontWeight: theme.typography.fontWeightRegular,
         },
+        panel: {
+            flexDirection: 'column'
+        }
     }),
 );
 export default function CourseTeachingPanel(props: { courseTeaching: TeachCourseState }) {
     const classes = useStyles();
     const [storeState, setStore] = React.useState(store.state);
+    const [normalPercentage, setNormalPercentage] = React.useState(50);
     const course = store.state.courses.state.get(props.courseTeaching.course_id);
     useEffect(() => {
         store.subscribe(state => setStore({...state}));
@@ -49,8 +55,20 @@ export default function CourseTeachingPanel(props: { courseTeaching: TeachCourse
                 <Typography
                     className={classes.heading}>{course?.name}</Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-                {/*todo: 成绩比例*/}
+            <ExpansionPanelDetails className={classes.panel}>
+                <div>
+                    <Typography id="continuous-slider" gutterBottom>
+                        平时分数占比 {normalPercentage} %
+                    </Typography>
+                    <Slider value={normalPercentage} step={5} onChange={(e, new_value) => {
+                        setNormalPercentage(new_value as number)
+                    }} aria-labelledby="continuous-slider"/>
+                    <Button color="primary" onClick={(e) => {
+                        store.state.courseSelections.giveFinalGrade(props.courseTeaching.id, normalPercentage);
+                    }}>
+                        确定最终成绩
+                    </Button>
+                </div>
                 <TableContainer component={Paper}>
                     <Table className={classes.table} aria-label="">
                         <TableHead>
@@ -75,7 +93,10 @@ export default function CourseTeachingPanel(props: { courseTeaching: TeachCourse
                                                     type="number"
                                                     value={courseSelection.regular_grade}
                                                     onChange={(e) => {
-                                                        //todo: Store.giveRegularScore(props.course.id, courseSelection.student_id, parseInt(e.target.value));
+                                                        store.state.courseSelections.put({
+                                                            ...courseSelection,
+                                                            regular_grade: parseInt(e.target.value)
+                                                        })
                                                     }}
                                                     InputLabelProps={{
                                                         shrink: true,
@@ -89,12 +110,18 @@ export default function CourseTeachingPanel(props: { courseTeaching: TeachCourse
                                                     type="number"
                                                     value={courseSelection.exam_grade}
                                                     onChange={(e) => {
-                                                        // todo: Store.giveExamScore(props.course.id, courseSelection.student_id, parseInt(e.target.value));
+                                                        store.state.courseSelections.put({
+                                                            ...courseSelection,
+                                                            exam_grade: parseInt(e.target.value)
+                                                        })
                                                     }}
                                                     InputLabelProps={{
                                                         shrink: true,
                                                     }}
                                                 />
+                                            </TableCell>
+                                            <TableCell>
+                                                {courseSelection.final_grade}
                                             </TableCell>
                                         </TableRow>);
                                 })}

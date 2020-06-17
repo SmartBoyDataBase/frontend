@@ -31,7 +31,6 @@ export class CourseSelectionStore extends StoreBase {
             })
     }
 
-
     public fetchAll() {
         Ajax.get('api/course-selections')
             .subscribe(response => {
@@ -65,5 +64,26 @@ export class CourseSelectionStore extends StoreBase {
                 );
                 this.updated();
             })
+    }
+
+    public put(courseSelection: CourseSelectionState) {
+        Ajax.put(`api/course-selection`, courseSelection)
+            .subscribe((response) => {
+                this.state.splice(
+                    this.state.findIndex(
+                        it => (
+                            it.student_id == response.response.student_id &&
+                            it.teach_course_id === response.response.teach_course_id
+                        )), 1, response.response);
+                this.updated();
+            })
+    }
+
+    public giveFinalGrade(teachcourse_id: number, regular_percentage: number) {
+        Ajax.post(`api/give-final-grade`, {
+            teachcourse_id: teachcourse_id,
+            regular_percentagea: regular_percentage,
+            exam_percentage: 100 - regular_percentage
+        }).subscribe(() => this.fetchByTeachCourse(teachcourse_id))
     }
 }
