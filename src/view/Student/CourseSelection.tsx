@@ -15,19 +15,40 @@ export default function MyCourseSelection(props: any) {
     const [courseSelections, setCourseSelections] = React.useState(
         Array.from(store.state.courseSelections.state.values())
     );
-    const [courses, setCourses] = React.useState(
+    const [teachCourses, setTeachCourses] = React.useState(
         Array.from(store.state.teachCourses.state.values())
+    );
+    const [courses, setCourses] = React.useState(
+        Array.from(store.state.courses.state.values())
+    );
+    const [teachers, setTeachers] = React.useState(
+        Array.from(store.state.teachers.state.values())
+    );
+    const [semesters, setSemesters] = React.useState(
+        Array.from(store.state.semesters.state.values())
     );
     useEffect(() => {
         store.state.courseSelections.subscribe((x) => {
             setCourseSelections(Array.from(x.values()));
         });
-        store.state.teachCourses.subscribe((x) => {
+        store.state.courses.subscribe((x) => {
             setCourses(Array.from(x.values()));
-        })
+        });
+        store.state.teachCourses.subscribe((x) => {
+            setTeachCourses(Array.from(x.values()));
+        });
+        store.state.teachers.subscribe((x) => {
+            setTeachers(Array.from(x.values()));
+        });
+        store.state.semesters.subscribe((x) => {
+            setSemesters(Array.from(x.values()));
+        });
         store.state.courseSelections
             .fetchByStudent(toNullable(store.state.user.state)?.id!);
+        store.state.courses.fetchAll();
         store.state.teachCourses.fetchAll();
+        store.state.teachers.fetchAll();
+        store.state.semesters.fetchAll();
     }, []);
     return (
         <TableContainer component={Paper}>
@@ -35,34 +56,46 @@ export default function MyCourseSelection(props: any) {
                 <TableHead>
                     <TableRow>
                         <TableCell>课程Id</TableCell>
+                        <TableCell>课程名称</TableCell>
+                        <TableCell>教师</TableCell>
+                        <TableCell>学期</TableCell>
                         <TableCell>平时成绩</TableCell>
                         <TableCell>考试成绩</TableCell>
                         <TableCell>总评成绩</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {courses.map((course: TeachCourseState) => {
+                    {teachCourses.map((teachCourse: TeachCourseState) => {
                         return (
                             <TableRow
-                                key={course.id}>
+                                key={teachCourse.id}>
                                 <TableCell component="td" scope="row">
-                                    {course.id}
+                                    {teachCourse.id}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    {courses.find(it => teachCourse.course_id === it.id)?.name}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    {teachers.find(it => it.id === teachCourse.teacher_id)?.name}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    {semesters.find(it => it.id === teachCourse.semester_id)?.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {courseSelections
-                                        .find(it => it.teach_course_id === course.id)?.regular_grade}
+                                        .find(it => it.teach_course_id === teachCourse.id)?.regular_grade}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {courseSelections
-                                        .find(it => it.teach_course_id === course.id)?.exam_grade}
+                                        .find(it => it.teach_course_id === teachCourse.id)?.exam_grade}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {courseSelections
-                                        .find(it => it.teach_course_id === course.id)?.final_grade}
+                                        .find(it => it.teach_course_id === teachCourse.id)?.final_grade}
                                 </TableCell>
                                 <TableCell padding="checkbox">
                                     <Checkbox
-                                        checked={courseSelections.find(it => it.teach_course_id === course.id) !== undefined}
+                                        checked={courseSelections.find(it => it.teach_course_id === teachCourse.id) !== undefined}
                                         disabled={
                                             courseSelections.find(it => it.regular_grade) !== undefined ||
                                             courseSelections.find(it => it.exam_grade) !== undefined

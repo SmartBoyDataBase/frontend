@@ -29,8 +29,17 @@ const useStyles = makeStyles({
 
 export default function TeachCourse(props: any) {
     const classes = useStyles();
-    const [storeState, setStore] = React.useState(
+    const [teachCourses, setTeachCourses] = React.useState(
         Array.from(store.state.teachCourses.state.values())
+    );
+    const [semesters, setSemesters] = React.useState(
+        Array.from(store.state.semesters.state.values())
+    );
+    const [courses, setCourses] = React.useState(
+        Array.from(store.state.courses.state.values())
+    );
+    const [teachers, setTeachers] = React.useState(
+        Array.from(store.state.teachers.state.values())
     );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
@@ -41,8 +50,20 @@ export default function TeachCourse(props: any) {
     });
     useEffect(() => {
         store.state.teachCourses.subscribe((x) => {
-            setStore(Array.from(x.values()));
+            setTeachCourses(Array.from(x.values()));
         });
+        store.state.semesters.subscribe((x) => {
+            setSemesters(Array.from(x.values()));
+        });
+        store.state.courses.subscribe((x) => {
+            setCourses(Array.from(x.values()));
+        });
+        store.state.teachers.subscribe((x) => {
+            setTeachers(Array.from(x.values()));
+        });
+        store.state.semesters.fetchAll();
+        store.state.courses.fetchAll();
+        store.state.teachers.fetchAll();
         store.state.teachCourses.fetchAll();
     }, []);
     const handleClickOpen = () => {
@@ -64,7 +85,7 @@ export default function TeachCourse(props: any) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {storeState.map((teachCourse: any) => {
+                    {teachCourses.map((teachCourse: any) => {
                         return (
                             <TableRow
                                 key={teachCourse.id}>
@@ -72,13 +93,13 @@ export default function TeachCourse(props: any) {
                                     {teachCourse.id}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.semester_id}
+                                    {semesters.find(it => it.id === teachCourse.semester_id)?.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.course_id}
+                                    {courses.find(it => it.id === teachCourse.course_id)?.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {teachCourse.teacher_id}
+                                    {teachers.find(it => it.id === teachCourse.teacher_id)?.name}
                                 </TableCell>
                             </TableRow>
                         );

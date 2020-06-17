@@ -29,8 +29,11 @@ const useStyles = makeStyles({
 
 export default function CourseSelection(props: any) {
     const classes = useStyles();
-    const [storeState, setStore] = React.useState(
-        Array.from(store.state.courseSelections.state.values())
+    const [courseSelection, setCourseSelection] = React.useState(
+        Array.from(store.state.courseSelections.state)
+    );
+    const [students, setStudents] = React.useState(
+        Array.from(store.state.students.state.values())
     );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
@@ -42,9 +45,13 @@ export default function CourseSelection(props: any) {
     });
     useEffect(() => {
         store.state.courseSelections.subscribe((x) => {
-            setStore(Array.from(x.values()));
+            setCourseSelection(Array.from(x));
+        });
+        store.state.students.subscribe((x) => {
+            setStudents(Array.from(x.values()));
         });
         store.state.courseSelections.fetchAll();
+        store.state.students.fetchAll();
     }, []);
     const handleClickOpen = () => {
         setOpen(true);
@@ -58,20 +65,20 @@ export default function CourseSelection(props: any) {
             <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>学生Id</TableCell>
-                        <TableCell>课程Id</TableCell>
+                        <TableCell>学生</TableCell>
+                        <TableCell>课程</TableCell>
                         <TableCell>平时成绩</TableCell>
                         <TableCell>考试成绩</TableCell>
                         <TableCell>总评成绩</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {storeState.map((courseSelection: any) => {
+                    {courseSelection.map((courseSelection: any) => {
                         return (
                             <TableRow
                                 key={`${courseSelection.student_id}-${courseSelection.course_id}`}>
                                 <TableCell component="td" scope="row">
-                                    {courseSelection.student_id}
+                                    {students.find(it => it.id === courseSelection.student_id)?.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {courseSelection.teach_course_id}

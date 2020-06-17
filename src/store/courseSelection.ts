@@ -19,7 +19,7 @@ export class CourseSelectionStore extends StoreBase {
         this.state = new Array<CourseSelectionState>();
     }
 
-    public subscribe(callback: (_: Map<number, CourseSelectionState>) => void): Subscription {
+    public subscribe(callback: (_: Array<CourseSelectionState>) => void): Subscription {
         return super.subscribe(callback)
     }
 
@@ -35,9 +35,12 @@ export class CourseSelectionStore extends StoreBase {
     public fetchAll() {
         Ajax.get('api/course-selections')
             .subscribe(response => {
-                response.response.forEach((it: CourseSelectionState) =>
-                    this.state.push(it)
-                );
+                response.response
+                    .forEach((it: CourseSelectionState) => {
+                            this.state = this.state.filter(old => !(old.teach_course_id === it.teach_course_id && old.student_id === it.student_id));
+                            this.state.push(it);
+                        }
+                    );
                 this.updated();
             })
     }
@@ -45,8 +48,10 @@ export class CourseSelectionStore extends StoreBase {
     public fetchByTeachCourse(id: number) {
         Ajax.get(`api/course-selections?teachcourse_id=${id}`)
             .subscribe(response => {
-                response.response.forEach((it: CourseSelectionState) =>
-                    this.state.push(it)
+                response.response.forEach((it: CourseSelectionState) => {
+                        this.state = this.state.filter(old => !(old.teach_course_id === it.teach_course_id && old.student_id === it.student_id));
+                        this.state.push(it);
+                    }
                 );
                 this.updated();
             })

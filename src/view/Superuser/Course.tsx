@@ -29,8 +29,11 @@ const useStyles = makeStyles({
 
 export default function Course(props: any) {
     const classes = useStyles();
-    const [storeState, setStore] = React.useState(
+    const [courses, setCourses] = React.useState(
         Array.from(store.state.courses.state.values())
+    );
+    const [departments, setDepartments] = React.useState(
+        Array.from(store.state.departments.state.values())
     );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
@@ -41,8 +44,13 @@ export default function Course(props: any) {
     });
     useEffect(() => {
         store.state.courses.subscribe((x) => {
-            setStore(Array.from(x.values()));
+            setCourses(Array.from(x.values()));
         });
+        store.state.departments.subscribe((x) => {
+            setDepartments(Array.from(x.values()));
+        });
+        // todo: fetch exactly the department used
+        store.state.departments.fetchAll();
         store.state.courses.fetchAll();
     }, []);
     const handleClickOpen = () => {
@@ -64,7 +72,7 @@ export default function Course(props: any) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {storeState.map((course: any) => {
+                    {courses.map((course: any) => {
                         return (
                             <TableRow key={course.id}>
                                 <TableCell component="td" scope="row">
@@ -77,7 +85,7 @@ export default function Course(props: any) {
                                     {course.credit}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {course.college_id}
+                                    {departments.find(it => it.id === course.college_id)?.name}
                                 </TableCell>
                             </TableRow>
                         );

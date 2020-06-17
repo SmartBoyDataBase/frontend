@@ -1,18 +1,22 @@
 import React, {useEffect} from "react";
-
-import {CourseState} from "../../store/course";
 import {
     createStyles,
     ExpansionPanel,
     ExpansionPanelDetails,
-    ExpansionPanelSummary, Paper, Table, TableCell, TableContainer, TableHead, TableRow, TextField,
+    ExpansionPanelSummary,
+    Paper,
+    Table,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
     Theme,
     Typography
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {store} from "../../store/store";
-import {toNullable} from "fp-ts/lib/Option";
 import {TeachCourseState} from "../../store/teachCourse";
 
 const useStyles = makeStyles((theme: Theme) =>
