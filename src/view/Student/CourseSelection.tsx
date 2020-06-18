@@ -83,23 +83,36 @@ export default function MyCourseSelection(props: any) {
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {courseSelections
-                                        .find(it => it.teach_course_id === teachCourse.id)?.regular_grade}
+                                        .find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.regular_grade}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {courseSelections
-                                        .find(it => it.teach_course_id === teachCourse.id)?.exam_grade}
+                                        .find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.exam_grade}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {courseSelections
-                                        .find(it => it.teach_course_id === teachCourse.id)?.final_grade}
+                                        .find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.final_grade}
                                 </TableCell>
                                 <TableCell padding="checkbox">
                                     <Checkbox
-                                        checked={courseSelections.find(it => it.teach_course_id === teachCourse.id) !== undefined}
+                                        checked={courseSelections.find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id) !== undefined}
                                         disabled={
-                                            courseSelections.find(it => it.regular_grade) !== undefined ||
-                                            courseSelections.find(it => it.exam_grade) !== undefined
+                                            courseSelections.find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.regular_grade !== undefined ||
+                                            courseSelections.find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.exam_grade !== undefined
                                         }
+                                        onChange={(e) => {
+                                            if (e.target.checked)
+                                                store.state.courseSelections.set({
+                                                    student_id: toNullable(store.state.user.state)!.id,
+                                                    teach_course_id: teachCourse.id
+                                                })
+                                            else {
+                                                store.state.courseSelections.delete({
+                                                    student_id: toNullable(store.state.user.state)!.id,
+                                                    teach_course_id: teachCourse.id
+                                                })
+                                            }
+                                        }}
                                     />
                                 </TableCell>
                             </TableRow>

@@ -72,9 +72,24 @@ export class CourseSelectionStore extends StoreBase {
                 this.state.splice(
                     this.state.findIndex(
                         it => (
-                            it.student_id == response.response.student_id &&
+                            it.student_id === response.response.student_id &&
                             it.teach_course_id === response.response.teach_course_id
-                        )), 1, response.response);
+                        )
+                    ), 1, response.response);
+                this.updated();
+            })
+    }
+
+    public delete(courseSelection: CourseSelectionState) {
+        Ajax.delete(`api/course-selection?student_id=${courseSelection.student_id}&teach_course_id=${courseSelection.teach_course_id}`)
+            .subscribe((_) => {
+                this.state.splice(
+                    this.state.findIndex(
+                        it => (
+                            it.student_id === courseSelection.student_id &&
+                            it.teach_course_id === courseSelection.teach_course_id
+                        )
+                    ), 1);
                 this.updated();
             })
     }
@@ -82,7 +97,7 @@ export class CourseSelectionStore extends StoreBase {
     public giveFinalGrade(teachcourse_id: number, regular_percentage: number) {
         Ajax.post(`api/give-final-grade`, {
             teachcourse_id: teachcourse_id,
-            regular_percentagea: regular_percentage,
+            regular_percentage: regular_percentage,
             exam_percentage: 100 - regular_percentage
         }).subscribe(() => this.fetchByTeachCourse(teachcourse_id))
     }

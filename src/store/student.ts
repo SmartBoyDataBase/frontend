@@ -31,7 +31,8 @@ export class StudentStore extends StoreBase {
                 .subscribe((response) => {
                     this.state.set(response.response.id, {
                         ...response.response,
-                        birthday: parse(response.response.birthday.slice(0, 10), 'yyyy-MM-dd', new Date())
+                        birthday: parse(response.response.birthday.slice(0, 10), 'yyyy-MM-dd', new Date()),
+                        entrance: parse(response.response.birthday.slice(0, 10), 'yyyy-MM-dd', new Date())
                     });
                     this.updated();
                 })
@@ -40,7 +41,8 @@ export class StudentStore extends StoreBase {
                 .subscribe((response) => {
                     this.state.set(response.response.id, {
                         ...response.response,
-                        birthday: parse(response.response.birthday.slice(0, 10), 'yyyy-MM-dd', new Date())
+                        birthday: parse(response.response.birthday.slice(0, 10), 'yyyy-MM-dd', new Date()),
+                        entrance: parse(response.response.birthday.slice(0, 10), 'yyyy-MM-dd', new Date())
                     });
                     this.updated();
                 })
