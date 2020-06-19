@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {store} from "../../store/store";
 import {toNullable} from "fp-ts/lib/Option";
-import {TableContainer} from "@material-ui/core";
+import {Select, TableContainer} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -10,6 +10,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import {TeachCourseState} from "../../store/teachCourse";
 import Checkbox from "@material-ui/core/Checkbox";
+import MenuItem from "@material-ui/core/MenuItem";
 
 export default function MyCourseSelection(props: any) {
     const [courseSelections, setCourseSelections] = React.useState(
@@ -27,6 +28,7 @@ export default function MyCourseSelection(props: any) {
     const [semesters, setSemesters] = React.useState(
         Array.from(store.state.semesters.state.values())
     );
+    const [filterBySemester, setFilterBySemester] = React.useState(0);
     useEffect(() => {
         store.state.courseSelections.subscribe((x) => {
             setCourseSelections(Array.from(x.values()));
@@ -52,6 +54,16 @@ export default function MyCourseSelection(props: any) {
     }, []);
     return (
         <TableContainer component={Paper}>
+            <Select
+                value={filterBySemester}
+                onChange={(e) => setFilterBySemester(e.target.value as number)}
+            >
+                <MenuItem value={0}>所有</MenuItem>
+                {
+                    Array.from(store.state.semesters.state.values())
+                        .map(semester => <MenuItem value={semester.id}>{semester.name}</MenuItem>)
+                }
+            </Select>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -65,59 +77,62 @@ export default function MyCourseSelection(props: any) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {teachCourses.map((teachCourse: TeachCourseState) => {
-                        return (
-                            <TableRow
-                                key={teachCourse.id}>
-                                <TableCell component="td" scope="row">
-                                    {teachCourse.id}
-                                </TableCell>
-                                <TableCell component="td" scope="row">
-                                    {courses.find(it => teachCourse.course_id === it.id)?.name}
-                                </TableCell>
-                                <TableCell component="td" scope="row">
-                                    {teachers.find(it => it.id === teachCourse.teacher_id)?.name}
-                                </TableCell>
-                                <TableCell component="td" scope="row">
-                                    {semesters.find(it => it.id === teachCourse.semester_id)?.name}
-                                </TableCell>
-                                <TableCell component="td" scope="row">
-                                    {courseSelections
-                                        .find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.regular_grade}
-                                </TableCell>
-                                <TableCell component="td" scope="row">
-                                    {courseSelections
-                                        .find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.exam_grade}
-                                </TableCell>
-                                <TableCell component="td" scope="row">
-                                    {courseSelections
-                                        .find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.final_grade}
-                                </TableCell>
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        checked={courseSelections.find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id) !== undefined}
-                                        disabled={
-                                            courseSelections.find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.regular_grade !== undefined ||
-                                            courseSelections.find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.exam_grade !== undefined
-                                        }
-                                        onChange={(e) => {
-                                            if (e.target.checked)
-                                                store.state.courseSelections.set({
-                                                    student_id: toNullable(store.state.user.state)!.id,
-                                                    teach_course_id: teachCourse.id
-                                                })
-                                            else {
-                                                store.state.courseSelections.delete({
-                                                    student_id: toNullable(store.state.user.state)!.id,
-                                                    teach_course_id: teachCourse.id
-                                                })
-                                            }
-                                        }}
-                                    />
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
+                    {
+                        teachCourses
+                            .filter(teachCourse => filterBySemester === 0 ? true : teachCourse.semester_id === filterBySemester)
+                            .map((teachCourse: TeachCourseState) => {
+                                return (
+                                    <TableRow
+                                        key={teachCourse.id}>
+                                        <TableCell component="td" scope="row">
+                                            {teachCourse.id}
+                                        </TableCell>
+                                        <TableCell component="td" scope="row">
+                                            {courses.find(it => teachCourse.course_id === it.id)?.name}
+                                        </TableCell>
+                                        <TableCell component="td" scope="row">
+                                            {teachers.find(it => it.id === teachCourse.teacher_id)?.name}
+                                        </TableCell>
+                                        <TableCell component="td" scope="row">
+                                            {semesters.find(it => it.id === teachCourse.semester_id)?.name}
+                                        </TableCell>
+                                        <TableCell component="td" scope="row">
+                                            {courseSelections
+                                                .find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.regular_grade}
+                                        </TableCell>
+                                        <TableCell component="td" scope="row">
+                                            {courseSelections
+                                                .find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.exam_grade}
+                                        </TableCell>
+                                        <TableCell component="td" scope="row">
+                                            {courseSelections
+                                                .find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.final_grade}
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                checked={courseSelections.find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id) !== undefined}
+                                                disabled={
+                                                    courseSelections.find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.regular_grade !== undefined ||
+                                                    courseSelections.find(it => it.teach_course_id === teachCourse.id && it.student_id === toNullable(store.state.user.state)!.id)?.exam_grade !== undefined
+                                                }
+                                                onChange={(e) => {
+                                                    if (e.target.checked)
+                                                        store.state.courseSelections.set({
+                                                            student_id: toNullable(store.state.user.state)!.id,
+                                                            teach_course_id: teachCourse.id
+                                                        })
+                                                    else {
+                                                        store.state.courseSelections.delete({
+                                                            student_id: toNullable(store.state.user.state)!.id,
+                                                            teach_course_id: teachCourse.id
+                                                        })
+                                                    }
+                                                }}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                 </TableBody>
             </Table>
         </TableContainer>
