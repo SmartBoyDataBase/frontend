@@ -23,6 +23,7 @@ import {
 } from "@material-ui/core";
 import {format, formatDistanceToNow, parse} from "date-fns";
 import RadioGroup from "@material-ui/core/RadioGroup";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles({
     table: {
@@ -70,6 +71,7 @@ export default function Teacher(props: any) {
                         <TableCell>名字</TableCell>
                         <TableCell>年龄</TableCell>
                         <TableCell>性别</TableCell>
+                        <TableCell>编辑</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -87,6 +89,16 @@ export default function Teacher(props: any) {
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {teacher.sex}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    <Button
+                                        color="secondary"
+                                        variant="contained"
+                                        startIcon={<DeleteIcon/>}
+                                        onClick={(e) => {
+                                            store.state.teachers.delete(teacher)
+                                        }}
+                                    >删除</Button>
                                 </TableCell>
                             </TableRow>
                         );

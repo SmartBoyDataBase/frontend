@@ -15,6 +15,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import {store} from "../../store/store";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles({
     table: {
@@ -69,6 +70,7 @@ export default function Course(props: any) {
                         <TableCell>名字</TableCell>
                         <TableCell>学分</TableCell>
                         <TableCell>学院</TableCell>
+                        <TableCell>编辑</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -86,6 +88,16 @@ export default function Course(props: any) {
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {departments.find(it => it.id === course.college_id)?.name}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    <Button
+                                        color="secondary"
+                                        variant="contained"
+                                        startIcon={<DeleteIcon/>}
+                                        onClick={(e) => {
+                                            store.state.courses.delete(course)
+                                        }}
+                                    >删除</Button>
                                 </TableCell>
                             </TableRow>
                         );

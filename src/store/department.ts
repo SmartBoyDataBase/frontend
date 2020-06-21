@@ -46,4 +46,12 @@ export class DepartmentStore extends StoreBase {
                 this.updated();
             })
     }
+
+    public delete(department: DepartmentState) {
+        Ajax.delete(`api/college?id=${department.id}`)
+            .subscribe(response => {
+                this.state.delete(department.id);
+                this.updated();
+            })
+    }
 }

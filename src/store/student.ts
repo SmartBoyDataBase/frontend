@@ -70,4 +70,12 @@ export class StudentStore extends StoreBase {
                 this.updated();
             })
     }
+
+    public delete(student: StudentState) {
+        Ajax.delete(`api/student?id=${student.id}`)
+            .subscribe(() => {
+                this.state.delete(student.id);
+                this.updated();
+            })
+    }
 }

@@ -11,8 +11,11 @@ import {
     DialogTitle,
     FormControlLabel,
     FormLabel,
+    InputLabel,
+    MenuItem,
     Paper,
     Radio,
+    Select,
     Table,
     TableBody,
     TableCell,
@@ -25,6 +28,7 @@ import {format, formatDistanceToNow} from "date-fns";
 import DateFnsUtils from '@date-io/date-fns';
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import RadioGroup from "@material-ui/core/RadioGroup";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles({
     table: {
@@ -58,6 +62,7 @@ export default function Student(props: any) {
         });
         if (store.state.students.state.size === 0)
             store.state.students.fetchAll();
+        store.state.departments.fetchAll();
     }, []);
     const handleClickOpen = () => {
         setOpen(true);
@@ -77,6 +82,7 @@ export default function Student(props: any) {
                         <TableCell>年龄</TableCell>
                         <TableCell>入校日期</TableCell>
                         <TableCell>性别</TableCell>
+                        <TableCell>编辑</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -90,7 +96,7 @@ export default function Student(props: any) {
                                     {student.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {student.college_id}
+                                    {store.state.departments.state.get(student.college_id)?.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {formatDistanceToNow(student.birthday)}
@@ -100,6 +106,16 @@ export default function Student(props: any) {
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {student.sex}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    <Button
+                                        color="secondary"
+                                        variant="contained"
+                                        startIcon={<DeleteIcon/>}
+                                        onClick={(e) => {
+                                            store.state.students.delete(student)
+                                        }}
+                                    >删除</Button>
                                 </TableCell>
                             </TableRow>
                         );
@@ -155,20 +171,24 @@ export default function Student(props: any) {
                         label="name"
                         type="text"
                         fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={editing.college_id}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                college_id: parseInt(e.target.value, 10),
-                            })
-                        }}
-                        margin="dense"
-                        id="college"
-                        label="college"
-                        type="number"
-                        fullWidth/>
+                    <div>
+                        <InputLabel id="college-label">学院</InputLabel>
+                        <Select
+                            labelId="college-label"
+                            value={editing.college_id}
+                            onChange={(e) => {
+                                setEditing({
+                                    ...editing,
+                                    college_id: e.target.value as number,
+                                })
+                            }}
+                        >
+                            {
+                                Array.from(store.state.departments.state.values())
+                                    .map(college => <MenuItem value={college.id}>{college.name}</MenuItem>)
+                            }
+                        </Select>
+                    </div>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                             disableToolbar

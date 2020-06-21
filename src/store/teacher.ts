@@ -63,4 +63,12 @@ export class TeacherStore extends StoreBase {
                 this.updated();
             })
     }
+
+    public delete(teacher: TeacherState) {
+        Ajax.delete(`api/teacher?id=${teacher.id}`)
+            .subscribe(response => {
+                this.state.delete(teacher.id);
+                this.updated();
+            });
+    }
 }

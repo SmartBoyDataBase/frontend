@@ -50,4 +50,12 @@ export class TeachCourseStore extends StoreBase {
                 this.updated();
             })
     }
+
+    public delete(teachCourseState: TeachCourseState) {
+        Ajax.delete(`api/teach-course?id=${teachCourseState.id}`)
+            .subscribe(response => {
+                this.state.delete(teachCourseState.id);
+                this.updated();
+            })
+    }
 }

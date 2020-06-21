@@ -18,6 +18,7 @@ import {store} from "../../store/store";
 import {format} from "date-fns";
 import {KeyboardDatePicker, MuiPickersUtilsProvider,} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles({
     table: {
@@ -64,6 +65,7 @@ export default function Semester(props: any) {
                         <TableCell>名字</TableCell>
                         <TableCell>开始日期</TableCell>
                         <TableCell>结束日期</TableCell>
+                        <TableCell>编辑</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -81,6 +83,16 @@ export default function Semester(props: any) {
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {format(semester.end, "yyyy-MM-dd")}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    <Button
+                                        color="secondary"
+                                        variant="contained"
+                                        startIcon={<DeleteIcon/>}
+                                        onClick={(e) => {
+                                            store.state.semesters.delete(semester)
+                                        }}
+                                    >删除</Button>
                                 </TableCell>
                             </TableRow>
                         );

@@ -76,4 +76,12 @@ export class SemesterStore extends StoreBase {
                 this.updated();
             })
     }
+
+    public delete(semester: SemesterState) {
+        Ajax.delete(`api/semester?id=${semester.id}`)
+            .subscribe(response => {
+                this.state.delete(semester.id);
+                this.updated();
+            })
+    }
 }

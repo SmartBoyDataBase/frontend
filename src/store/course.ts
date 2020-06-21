@@ -56,4 +56,12 @@ export class CourseStore extends StoreBase {
                 this.updated();
             });
     }
+
+    public delete(course: CourseState) {
+        Ajax.delete(`api/course?id=${course.id}`)
+            .subscribe(response => {
+                this.state.delete(course.id);
+                this.updated();
+            });
+    }
 }

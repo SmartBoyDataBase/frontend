@@ -15,6 +15,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import {store} from "../../store/store";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles({
     table: {
@@ -59,6 +60,7 @@ export default function Department(props: any) {
                         <TableCell>Id</TableCell>
                         <TableCell>名字</TableCell>
                         <TableCell>管理员</TableCell>
+                        <TableCell>编辑</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -73,6 +75,16 @@ export default function Department(props: any) {
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {department.admin}
+                                </TableCell>
+                                <TableCell component="td" scope="row">
+                                    <Button
+                                        color="secondary"
+                                        variant="contained"
+                                        startIcon={<DeleteIcon/>}
+                                        onClick={(e) => {
+                                            store.state.departments.delete(department)
+                                        }}
+                                    >删除</Button>
                                 </TableCell>
                             </TableRow>
                         );
