@@ -21,9 +21,11 @@ import {
     TableRow,
     TextField
 } from "@material-ui/core";
-import {format, formatDistanceToNow, parse} from "date-fns";
+import {formatDistanceToNow} from "date-fns";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import DeleteIcon from "@material-ui/icons/Delete";
+import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 const useStyles = makeStyles({
     table: {
@@ -154,20 +156,20 @@ export default function Teacher(props: any) {
                         label="name"
                         type="text"
                         fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={format(editing.birthday, 'yyyy-MM-dd')}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                birthday: parse(e.target.value, 'yyyy-MM-dd', new Date())
-                            })
-                        }}
-                        margin="dense"
-                        id="birthday"
-                        label="birthday"
-                        type="birthday"
-                        fullWidth/>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="yyyy-MM-dd"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label="出生日期"
+                            value={editing.birthday}
+                            onChange={(e) => {
+                                setEditing({...editing, birthday: e as Date})
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
                     <FormLabel component="legend">性别</FormLabel>
                     <RadioGroup aria-label="性别" name="性别" value={editing.sex} onChange={(e) => {
                         setEditing({

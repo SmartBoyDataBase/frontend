@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {TableContainer} from "@material-ui/core";
+import {InputLabel, MenuItem, Select, TableContainer} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -52,6 +52,7 @@ export default function CourseSelection(props: any) {
             setStudents(Array.from(x.values()));
         });
         store.state.courseSelections.fetchAll();
+        store.state.teachCourses.fetchAll();
         store.state.students.fetchAll();
     }, []);
     const handleClickOpen = () => {
@@ -116,34 +117,40 @@ export default function CourseSelection(props: any) {
                     <DialogContentText>
                         请输入选课信息
                     </DialogContentText>
-                    <TextField
-                        autoFocus
-                        value={editing.student_id}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                student_id: parseInt(e.target.value)
-                            });
-                        }}
-                        margin="dense"
-                        id="studentId"
-                        label="studentId"
-                        type="number"
-                        fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={editing.teach_course_id}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                teach_course_id: parseInt(e.target.value)
-                            });
-                        }}
-                        margin="dense"
-                        id="teachCourse_id"
-                        label="teachCourse_id"
-                        type="number"
-                        fullWidth/>
+                    <div>
+                        <InputLabel id="student-label">学生</InputLabel>
+                        <Select
+                            labelId="student-label"
+                            value={editing.student_id}
+                            onChange={(e) => {
+                                setEditing({
+                                    ...editing,
+                                    student_id: e.target.value as number,
+                                })
+                            }}>
+                            {
+                                Array.from(store.state.students.state.values())
+                                    .map(student => <MenuItem value={student.id}>{student.name}</MenuItem>)
+                            }
+                        </Select>
+                    </div>
+                    <div>
+                        <InputLabel id="teach-course-label">开课id</InputLabel>
+                        <Select
+                            labelId="teach-course-label"
+                            value={editing.teach_course_id}
+                            onChange={(e) => {
+                                setEditing({
+                                    ...editing,
+                                    teach_course_id: e.target.value as number,
+                                })
+                            }}>
+                            {
+                                Array.from(store.state.teachCourses.state.values())
+                                    .map(teachCourse => <MenuItem value={teachCourse.id}>{teachCourse.id}</MenuItem>)
+                            }
+                        </Select>
+                    </div>
                     <TextField
                         autoFocus
                         value={editing.regular_grade}

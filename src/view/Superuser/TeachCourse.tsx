@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {TableContainer} from "@material-ui/core";
+import {InputLabel, MenuItem, Select, TableContainer} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -12,7 +12,6 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import {store} from "../../store/store";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -25,6 +24,10 @@ const useStyles = makeStyles({
         width: '100%',
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0
+    },
+    select: {
+        minWidth: 140,
+        marginBottom: 8
     }
 });
 
@@ -125,48 +128,60 @@ export default function TeachCourse(props: any) {
                     <DialogContentText>
                         请输入开课信息
                     </DialogContentText>
-                    <TextField
-                        autoFocus
-                        value={editing.semester_id}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                semester_id: parseInt(e.target.value)
-                            });
-                        }}
-                        margin="dense"
-                        id="semesterId"
-                        label="semesterId"
-                        type="text"
-                        fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={editing.course_id}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                course_id: parseInt(e.target.value)
-                            });
-                        }}
-                        margin="dense"
-                        id="courseId"
-                        label="courseId"
-                        type="text"
-                        fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={editing.teacher_id}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                teacher_id: parseInt(e.target.value)
-                            });
-                        }}
-                        margin="dense"
-                        id="teacherId"
-                        label="teacherId"
-                        type="text"
-                        fullWidth/>
+                    <div>
+                        <InputLabel id="semester-label">学期</InputLabel>
+                        <Select
+                            className={classes.select}
+                            labelId="semester-label"
+                            value={editing.semester_id}
+                            onChange={(e) => {
+                                setEditing({
+                                    ...editing,
+                                    semester_id: e.target.value as number,
+                                })
+                            }}>
+                            {
+                                Array.from(store.state.semesters.state.values())
+                                    .map(semester => <MenuItem value={semester.id}>{semester.name}</MenuItem>)
+                            }
+                        </Select>
+                    </div>
+                    <div>
+                        <InputLabel id="course-label">课程</InputLabel>
+                        <Select
+                            className={classes.select}
+                            labelId="course-label"
+                            value={editing.course_id}
+                            onChange={(e) => {
+                                setEditing({
+                                    ...editing,
+                                    course_id: e.target.value as number,
+                                })
+                            }}>
+                            {
+                                Array.from(store.state.courses.state.values())
+                                    .map(course => <MenuItem value={course.id}>{course.name}</MenuItem>)
+                            }
+                        </Select>
+                    </div>
+                    <div>
+                        <InputLabel id="teacher-label">教师</InputLabel>
+                        <Select
+                            className={classes.select}
+                            labelId="teacher-label"
+                            value={editing.teacher_id}
+                            onChange={(e) => {
+                                setEditing({
+                                    ...editing,
+                                    teacher_id: e.target.value as number,
+                                })
+                            }}>
+                            {
+                                Array.from(store.state.teachers.state.values())
+                                    .map(teacher => <MenuItem value={teacher.id}>{teacher.name}</MenuItem>)
+                            }
+                        </Select>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

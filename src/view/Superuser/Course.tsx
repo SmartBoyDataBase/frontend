@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {TableContainer} from "@material-ui/core";
+import {InputLabel, MenuItem, Select, TableContainer} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -139,20 +139,23 @@ export default function Course(props: any) {
                         label="credit"
                         type="number"
                         fullWidth/>
-                    <TextField
-                        autoFocus
-                        value={editing.college_id}
-                        onChange={(e) => {
-                            setEditing({
-                                ...editing,
-                                college_id: parseInt(e.target.value, 10)
-                            });
-                        }}
-                        margin="dense"
-                        id="college_id"
-                        label="college_id"
-                        type="number"
-                        fullWidth/>
+                    <div>
+                        <InputLabel id="college-label">学院</InputLabel>
+                        <Select
+                            labelId="college-label"
+                            value={editing.college_id}
+                            onChange={(e) => {
+                                setEditing({
+                                    ...editing,
+                                    college_id: e.target.value as number,
+                                })
+                            }}>
+                            {
+                                Array.from(store.state.departments.state.values())
+                                    .map(college => <MenuItem value={college.id}>{college.name}</MenuItem>)
+                            }
+                        </Select>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
