@@ -1,6 +1,6 @@
 import {ajax} from 'rxjs/ajax';
 
-const baseUrl = "http://0.0.0.0:30000/";
+const baseUrl = "http://homework.xn--gmqr38ag3ag6puy9a.com/";
 export const Ajax = {
     token: "",
     setToken(token: string) {
