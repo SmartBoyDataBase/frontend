@@ -45,6 +45,9 @@ export default function Student(props: any) {
     const [storeState, setStore] = React.useState(
         Array.from(store.state.students.state.values())
     );
+    const [departmentState, setDepartment] = React.useState(
+        Array.from(store.state.departments.state.values())
+    );
     const [open, setOpen] = React.useState(false);
     const [editing, setEditing] = React.useState({
         id: 0,
@@ -59,6 +62,9 @@ export default function Student(props: any) {
     useEffect(() => {
         store.state.students.subscribe((x) => {
             setStore(Array.from(x.values()));
+        });
+        store.state.departments.subscribe((x) => {
+            setDepartment(Array.from(x.values()));
         });
         if (store.state.students.state.size === 0)
             store.state.students.fetchAll();
@@ -96,7 +102,7 @@ export default function Student(props: any) {
                                     {student.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
-                                    {store.state.departments.state.get(student.college_id)?.name}
+                                    {departmentState.find(d => d.id === student.college_id)?.name}
                                 </TableCell>
                                 <TableCell component="td" scope="row">
                                     {formatDistanceToNow(student.birthday)}
